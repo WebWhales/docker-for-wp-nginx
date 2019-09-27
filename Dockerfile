@@ -33,7 +33,7 @@ RUN apt-get update && apt-get -y install \
 RUN mkdir -p /run/php && \
     mkdir -p /var/log/nginx && \
     mkdir -p /var/log/php && \
-    mkdir -p /var/log/supervisor && \
+    mkdir -p /var/log/supervisor
 
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-png-dir=/usr/include/ --with-jpeg-dir=/usr/include/; \
     docker-php-ext-install -j$(nproc) gd; \
