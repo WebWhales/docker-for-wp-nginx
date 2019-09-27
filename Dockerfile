@@ -67,10 +67,20 @@ COPY config/nginx/default-site.conf /etc/nginx/sites-available/default
 COPY config/nginx/conf.d/. /etc/nginx/conf.d/
 COPY config/nginx/snippets/. /etc/nginx/snippets/
 
+# Add an SSL certificate for *.localhost
+RUN openssl req -x509 \
+    -out /etc/ssl/localhost.crt \
+    -keyout /etc/ssl/localhost.key \
+    -newkey rsa:2048 -nodes -sha256 -days 1024 \
+    -subj "/C=NL/ST=Zuid-Holland/O=Localhost/CN=localhost" \
+    -extensions EXT -config <( \
+        printf "[dn]\nCN=localhost\n[req]\ndistinguished_name = dn\n[EXT]\nsubjectAltName=DNS:localhost,DNS:*.localhost\nkeyUsage=digitalSignature\nextendedKeyUsage=serverAuth")
+
 
 # Copy php config
 COPY config/php/www.conf /usr/local/etc/php-fpm.d/www.conf
 RUN rm -f /usr/local/etc/php-fpm.d/zz-docker.conf
+
 
 # Copy suporvisor config
 COPY config/supervisor/supervisord.conf /etc/supervisord.conf
