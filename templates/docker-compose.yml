@@ -1,0 +1,17 @@
+version: '3.7'
+
+services:
+  # NGINX / PHP
+  web:
+    build:
+      context: ./
+      dockerfile: ./.docker/run/nginx_php-73-fpm.dockerfile
+    container_name: web
+    hostname: domain.localhost
+    volumes:
+      - ./templates/site.conf:/etc/nginx/sites-enabled/site.conf
+      #- ./templates/site.ini:/usr/local/etc/php/conf.d/wpbasethemedev.ini
+      #- ./logs/web_nginx:/var/log/nginx
+      - ./:/var/www/html
+    ports:
+      - "80:80"
