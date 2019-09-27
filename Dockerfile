@@ -72,8 +72,20 @@ COPY config/nginx/snippets/. /etc/nginx/snippets/
 COPY config/php/www.conf /usr/local/etc/php-fpm.d/www.conf
 RUN rm -f /usr/local/etc/php-fpm.d/zz-docker.conf
 
+
 # Copy suporvisor config
 COPY config/supervisor/supervisord.conf /etc/supervisord.conf
+
+
+# Add an SSL certificate for *.localhost
+COPY config/ssl/localhost.ext /etc/ssl/localhost.ext
+RUN openssl req -x509 \
+    -out /etc/ssl/localhost.crt \
+    -keyout /etc/ssl/localhost.key \
+    -newkey rsa:2048 -nodes -sha256 -days 1024 \
+    -subj "/C=NL/ST=Zuid-Holland/O=Localhost/CN=localhost" \
+    -extensions EXT \
+    -config /etc/ssl/localhost.ext
 
 
 #
