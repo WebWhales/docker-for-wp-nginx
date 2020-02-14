@@ -20,7 +20,6 @@ RUN apt-get update && apt-get -y install \
     libxslt1-dev \
     libzip-dev \
     make \
-    nano \
     nginx \
     openssl \
     pkg-config \
@@ -58,6 +57,10 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-png-dir
     apt-get autoremove --purge -y && apt-get autoclean -y && apt-get clean -y; \
     rm -rf /var/lib/apt/lists/*; \
     rm -rf /tmp/* /var/tmp/*
+
+# Install the packages we need. We do this here, because unused packages are removed above
+RUN apt-get update && apt-get -y install \
+    nano
 
 
 # Copy nginx config
