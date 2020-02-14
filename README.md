@@ -19,8 +19,6 @@ When using our template files, follow these steps to start using this image:
     * When you change the database name and/or user, make sure to also change these in the `.docker/conf/mysql/docker-entrypoint-initdb.d/create_database.sql` file
 * Run `docker-compose up -d` from the root of your project directory
 
-Furthermore, here are some tips to help you on your way:
-
 
 ### Bonus: some tips to help you on your way
 
