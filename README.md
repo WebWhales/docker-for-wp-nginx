@@ -24,6 +24,7 @@ When using our template files, follow these steps to start using this image:
 
 * There are some helpful NGINX config snippets available. You can find them in the `/config/nginx/snippets/` folder within the repository.
 * The `web` container contains the following command line tools:
+  * `composer`
   * `nano`
   * `nodejs`, `npm` and `yarn`
   * `gulp` and `gulp-cli`
