@@ -136,8 +136,8 @@ RUN composer global require friendsofphp/php-cs-fixer
 #
 # Change the necessary user rights
 #
-chown -R www-data: /var/www
-chmod -R 0755 /var/www
+RUN chown -R www-data: /var/www
+RUN chmod -R 0755 /var/www
 
 
 EXPOSE 80 443
