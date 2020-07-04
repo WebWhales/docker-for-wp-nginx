@@ -143,8 +143,5 @@ RUN chmod -R 0755 /var/www
 EXPOSE 80 443
 
 
-USER www-data
-
-
 # Let supervisord start nginx & php-fpm
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
