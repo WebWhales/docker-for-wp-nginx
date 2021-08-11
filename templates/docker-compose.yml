@@ -9,25 +9,22 @@ services:
   web:
     image: webwhales/for-wp-nginx:latest
     #image: webwhales/for-wp-nginx:php7.3-fpm
-    container_name: web
     hostname: domain.localhost
     restart: unless-stopped
     volumes:
-      - ./.docker/conf/nginx-site.conf:/etc/nginx/sites-enabled/site.conf
-      - ./.docker/conf/php-site.ini:/usr/local/etc/php/conf.d/site.ini
-      - ./.docker/conf/supervisor-site.conf:/etc/supervisor/conf.d/site.conf
+      - ./.docker/conf/site.conf:/etc/nginx/sites-enabled/site.conf
+      - ./.docker/conf/site.ini:/usr/local/etc/php/conf.d/site.ini
+      - ./.docker/conf/supervisor.conf:/etc/supervisor/conf.d/site.conf
       - ./.docker/logs/nginx:/var/log/nginx
       - ./:/var/www/html
     ports:
       - "8080:80"
-      - "8081:443"
     links:
       - db
 
   # MySQL
   db:
     image: mariadb:10.4
-    container_name: db
     restart: unless-stopped
     volumes:
       - ./.docker/conf/mysql/docker-entrypoint-initdb.d/create_test_database.sql:/docker-entrypoint-initdb.d/create_test_database.sql
@@ -46,7 +43,6 @@ services:
   # phpMyAdmin
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
-    container_name: phpmyadmin
     hostname: domain.localhost
     restart: unless-stopped
     volumes:
