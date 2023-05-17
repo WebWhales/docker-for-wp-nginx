@@ -9,7 +9,7 @@ services:
   web:
     image: webwhales/for-wp-nginx:php8.0-fpm
     #image: webwhales/for-wp-nginx:latest
-    hostname: domain.localhost
+    hostname: localhost
     restart: unless-stopped
     volumes:
       - ./.docker/conf/site.conf:/etc/nginx/sites-enabled/site.conf
