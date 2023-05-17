@@ -7,9 +7,9 @@ services:
 
   # NGINX / PHP
   web:
-    image: webwhales/for-wp-nginx:latest
-    #image: webwhales/for-wp-nginx:php8.0-fpm
-    hostname: domain.localhost
+    image: webwhales/for-wp-nginx:php8.0-fpm
+    #image: webwhales/for-wp-nginx:latest
+    hostname: localhost
     restart: unless-stopped
     volumes:
       - ./.docker/conf/site.conf:/etc/nginx/sites-enabled/site.conf
