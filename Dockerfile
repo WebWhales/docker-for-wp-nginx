@@ -15,6 +15,7 @@ RUN apt-get update && apt-get -y install \
     libmagickwand-dev \
     libmcrypt-dev \
     libpng-dev \
+    libwebp-dev \
     libreadline-dev \
     libssl-dev \
     libxslt1-dev \
@@ -34,33 +35,38 @@ RUN mkdir -p /run/php && \
     mkdir -p /var/log/php && \
     mkdir -p /var/log/supervisor
 
-RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-png-dir=/usr/include/ --with-jpeg-dir=/usr/include/; \
-    docker-php-ext-install -j$(nproc) gd; \
+# Install PHP packages
+RUN docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg --with-webp; \
     docker-php-ext-configure intl; \
-    docker-php-ext-install -j$(nproc) intl; \
     docker-php-ext-install -j$(nproc) \
-        bcmath \
-        bz2 \
-        calendar \
-        exif \
-        gettext \
-        iconv \
-        mysqli  \
-        opcache \
-        pdo_mysql \
-        soap \
-        sockets \
-        xsl \
-        zip; \
-    pecl install redis && docker-php-ext-enable redis; \
-    yes '' | pecl install imagick && docker-php-ext-enable imagick \
+      bcmath \
+      bz2 \
+      calendar \
+      exif \
+      gd \
+      gettext \
+      iconv \
+      intl \
+      mysqli  \
+      opcache \
+      pdo_mysql \
+      soap \
+      sockets \
+      xsl \
+      zip
+RUN pecl install redis xdebug && docker-php-ext-enable redis
+RUN yes '' | pecl install imagick && docker-php-ext-enable imagick
+RUN docker-php-ext-enable xdebug
+RUN docker-php-source delete; \
     apt-get autoremove --purge -y && apt-get autoclean -y && apt-get clean -y; \
     rm -rf /var/lib/apt/lists/*; \
     rm -rf /tmp/* /var/tmp/*
 
-# Install the packages we need. We do this here, because unused packages are removed above
+# Install the packages we need to persist. We do this here, because unused packages are removed above
 RUN apt-get update && apt-get -y install \
-    nano
+    mariadb-client \
+    nano \
+    unzip
 
 
 # Copy nginx config
@@ -74,6 +80,14 @@ COPY config/nginx/snippets/. /etc/nginx/snippets/
 # Copy php config
 COPY config/php/www.conf /usr/local/etc/php-fpm.d/www.conf
 RUN rm -f /usr/local/etc/php-fpm.d/zz-docker.conf
+RUN { \
+        echo 'xdebug.mode = debug'; \
+        echo 'xdebug.remote_enable = 1'; \
+        echo 'xdebug.discover_client_host = false'; \
+        echo 'xdebug.client_host = host.docker.internal'; \
+        echo 'xdebug.start_with_request = trigger'; \
+        echo 'xdebug.idekey = PHPSTORM'; \
+    } >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 
 # Copy suporvisor config
@@ -95,28 +109,19 @@ RUN openssl req -x509 \
 # Install Composer
 #
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-RUN export PATH="$PATH:$HOME/.composer/vendor/bin"
 
 
 #
 # Install NodeJS
 #
-RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
-RUN apt-get update && apt-get install -y nodejs
-RUN nodejs -v
-RUN export PATH="$PATH:/usr/src/app/node_modules/.bin"
+RUN curl -fsSL https://deb.nodesource.com/setup_14.x | bash -
+RUN apt-get install -y nodejs && node --version
 
 
 #
-# Installing Yarn globally
+# Installing gulp, yarn and n globally
 #
-RUN npm -g install yarn
-
-
-#
-# Install Gulp globally
-#
-RUN npm install -g gulp-cli gulp
+RUN npm -g install gulp-cli gulp yarn n
 
 
 #
@@ -128,16 +133,13 @@ RUN curl https://phar.phpunit.de/phpunit.phar -L > phpunit.phar \
 
 
 #
-# Install php-cs-fixer
-#
-RUN composer global require friendsofphp/php-cs-fixer
-
-
-#
 # Change the necessary user rights
 #
 RUN chown -R www-data: /var/www
 RUN chmod -R 0755 /var/www
+
+
+ENV PATH "$PATH:$HOME/.composer/vendor/bin:/root/.composer/vendor/bin:/usr/src/app/node_modules/.bin"
 
 
 EXPOSE 80 443
