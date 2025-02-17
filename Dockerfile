@@ -1,4 +1,4 @@
-FROM php:8.1-fpm
+FROM php:8.2-fpm
 
 # Install the packages we need
 RUN apt-get update && apt-get -y install \
@@ -115,7 +115,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # Install NodeJS
 #
 RUN curl -fsSL https://deb.nodesource.com/setup_14.x | bash -
-RUN apt-get install -y nodejs && node --version
+RUN apt-get install -y nodejs npm
 
 
 #

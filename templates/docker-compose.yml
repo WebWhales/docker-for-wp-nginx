@@ -7,7 +7,7 @@ services:
 
   # NGINX / PHP
   web:
-    image: webwhales/for-wp-nginx:php8.1-fpm
+    image: webwhales/for-wp-nginx:php8.2-fpm
     #image: webwhales/for-wp-nginx:latest
     hostname: localhost
     restart: unless-stopped
