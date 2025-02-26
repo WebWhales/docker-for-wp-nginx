@@ -138,7 +138,7 @@ RUN chown -R www-data: /var/www
 RUN chmod -R 0755 /var/www
 
 
-ENV PATH "$PATH:$HOME/.composer/vendor/bin:/root/.composer/vendor/bin:/usr/src/app/node_modules/.bin"
+ENV PATH="$PATH:/root/.composer/vendor/bin:/usr/src/app/node_modules/.bin"
 
 
 EXPOSE 80 443
