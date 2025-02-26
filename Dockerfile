@@ -82,7 +82,6 @@ COPY config/php/www.conf /usr/local/etc/php-fpm.d/www.conf
 RUN rm -f /usr/local/etc/php-fpm.d/zz-docker.conf
 RUN { \
         echo 'xdebug.mode = debug'; \
-        echo 'xdebug.remote_enable = 1'; \
         echo 'xdebug.discover_client_host = false'; \
         echo 'xdebug.client_host = host.docker.internal'; \
         echo 'xdebug.start_with_request = trigger'; \
