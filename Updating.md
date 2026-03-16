@@ -13,5 +13,5 @@
 
 * Check out the branch corresponding with the tag, like `php8.1-fpm` 
 * Run: `dos2unix config/docker-entrypoint.sh`
-* Run: `docker build --no-cache -t webwhales/for-wp-nginx:[tag] .`
+* Run: `docker build -t webwhales/for-wp-nginx:[tag] .`
 * Run: `docker push webwhales/for-wp-nginx:[tag]`
