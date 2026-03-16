@@ -47,7 +47,7 @@ RUN docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg --with-w
       iconv \
       intl \
       mysqli  \
-      opcache \
+      pcntl \
       pdo_mysql \
       soap \
       sockets \
