@@ -8,7 +8,6 @@ RUN apt-get update && apt-get -y install \
     gcc \
     git \
     libbz2-dev \
-    libc-client-dev \
     libc-dev \
     libfreetype6-dev \
     libjpeg-dev \
