@@ -11,6 +11,8 @@ services:
     #image: webwhales/for-wp-nginx:latest
     hostname: localhost
     restart: unless-stopped
+    environment:
+      NODE_VERSION: 20
     volumes:
       - ./.docker/conf/site.conf:/etc/nginx/sites-enabled/site.conf
       - ./.docker/conf/site.ini:/usr/local/etc/php/conf.d/site.ini

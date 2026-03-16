@@ -66,8 +66,9 @@ RUN docker-php-source delete; \
 RUN apt-get update && apt-get -y install \
     mariadb-client \
     nano \
-    unzip
-
+    unzip \
+    xz-utils \
+    ca-certificates
 
 # Copy nginx config
 RUN mkdir -p /var/www/dummy
@@ -111,17 +112,16 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 
 #
-# Install NodeJS
+# Install NodeJS, Corepack, Gulp, and n globally
 #
-RUN curl -fsSL https://deb.nodesource.com/setup_14.x | bash -
-RUN apt-get install -y nodejs npm
-
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+RUN apt-get install -y nodejs && node --version
+RUN npm -g install corepack gulp-cli gulp n
 
 #
-# Installing gulp, yarn and n globally
+# Install Yarn
 #
-RUN npm -g install gulp-cli gulp yarn n
-
+RUN corepack enable && yarn set version stable && yarn set version 4.x
 
 #
 # Install PHPUnit
@@ -138,11 +138,17 @@ RUN chown -R www-data: /var/www
 RUN chmod -R 0755 /var/www
 
 
-ENV PATH="$PATH:/root/.composer/vendor/bin:/usr/src/app/node_modules/.bin"
+#
+# Setup entrypoint
+#
+COPY config/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
+ENV PATH="$PATH:/root/.config/composer/vendor/bin"
 
 EXPOSE 80 443
 
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
 # Let supervisord start nginx & php-fpm
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
